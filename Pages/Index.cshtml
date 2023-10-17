@@ -1,0 +1,171 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<style>
+    /* Container for the search bar */
+    .search-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 20px;
+    }
+
+    /* Input field styling */
+    .search-input {
+        padding: 10px;
+        width: 300px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        outline: none;
+    }
+
+    .left {
+        float: left;
+        margin-right: 10px;
+    }
+
+    .right {
+        float: right;
+        margin-left: 10px;
+    }
+    /* Card styling */
+    .card {
+        border: none;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease-in-out;
+    }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+    .card-img-top {
+        height: 236px;
+        object-fit: cover;
+    }
+
+    .card-title {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 10px;
+        color: #8e44ad; /* Purple color */
+    }
+
+    .card-text {
+        font-size: 16px;
+        margin-bottom: 15px;
+    }
+
+    .btn-add-to-cart {
+        background-color: #8e44ad; /* Purple color */
+        color: white;
+        border: none;
+        border-radius: 0;
+        transition: background-color 0.3s ease-in-out;
+    }
+
+        .btn-add-to-cart:hover {
+            background-color: #9b59b6; /* Darker shade of purple */
+        }
+
+    .btn-details {
+        background-color: transparent;
+        color: #8e44ad; /* Purple color */
+        border: 1px solid #8e44ad; /* Purple color */
+        border-radius: 0;
+        transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+    }
+
+        .btn-details:hover {
+            background-color: #8e44ad; /* Purple color */
+            color: white;
+        }
+
+
+
+
+</style>
+
+<script>
+    function filterProducts() {
+        var category = document.getElementById("categorySelect").value;
+        var searchString = document.getElementById("searchInput").value.toLowerCase();
+        var cards = document.getElementsByClassName("product-card");
+
+        for (var i = 0; i < cards.length; i++) {
+            var card = cards[i];
+            var cardCategory = card.getAttribute("data-category");
+            var cardTitle = card.getAttribute("data-title").toLowerCase();
+
+            var categoryMatch = category === "" || cardCategory === category;
+            var searchMatch = cardTitle.includes(searchString);
+
+            if (categoryMatch && searchMatch) {
+                card.style.display = "block";
+            } else {
+                card.style.display = "none";
+            }
+        }
+    }
+</script>
+
+<div class="search-container">
+    <input type="text" id="searchInput" class="search-input left" placeholder="Rechercher..." oninput="filterProducts()">
+    <select id="categorySelect" class="search-input right" onchange="filterProducts()">
+        <option value="">All Categories</option>
+        @foreach (var item in Model.Categorie)
+        {
+            <option value="@item.CategorieID">@item.NomCategorie</option>
+        }
+    </select>
+</div>
+
+<div class="row mt-5"></div>
+
+
+<div class="row">
+    @foreach (var item in Model.Produit)
+    {
+        <div class="col-md-4 mb-4 product-card" data-category="@item.CategorieID" data-title="@item.Description.ToLower()">
+            <div class="container page-wrapper">
+                <div class="page-inner">
+                    <div class="row">
+                        <div class="el-wrapper">
+                            <div class="box-up">
+                               <img src="@item.ImagePath" class="card-img-top img " alt="Product Image">
+                                <div class="img-info">
+                                    <div class="info-inner">
+                                        <span class="p-name">@Html.DisplayFor(modelItem => item.Description)</span>
+                                        <span class="p-company">@Html.DisplayFor(modelItem => item.Categorie.NomCategorie)</span>
+                                    </div>
+                                    <div class="a-size">Quantité disponible : <span class="size">@Html.DisplayFor(modelItem => item.Quantite)</span></div>
+                                </div>
+                            </div>
+
+                            <div class="box-down">
+                                <div class="h-bg">
+                                    <div class="h-bg-inner"></div>
+                                </div>
+
+                                <a class="cart" href="#">
+                                    <span class="price">@Html.DisplayFor(modelItem => item.Prix) MAD</span>
+                                    <span class="add-to-cart">
+                                        <span class="txt">Ajouter au panier</span>
+                                    </span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+
+
+<div class="row mt-5"></div>
+<script src="https://kit.fontawesome.com/893a108b01.js" crossorigin="anonymous"></script>
