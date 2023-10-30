@@ -129,7 +129,7 @@
 <div class="row">
     @foreach (var item in Model.Produit)
     {
-        <div class="col-md-4 mb-4 product-card" data-category="@item.CategorieID" data-title="@item.Description.ToLower()">
+        <div class="col-md-4 mb-4 product-card" data-category="@item.CategorieID" data-title="@item.Description.ToLower()" data-product-id="@item.ProduitID">
             <div class="container page-wrapper">
                 <div class="page-inner">
                     <div class="row">
@@ -150,7 +150,7 @@
                                     <div class="h-bg-inner"></div>
                                 </div>
 
-                                <a class="cart" href="#">
+                                <a class="cart" href="#" data-id="@item.ProduitID" onclick="addToCart(@item.ProduitID)">
                                     <span class="price">@Html.DisplayFor(modelItem => item.Prix) MAD</span>
                                     <span class="add-to-cart">
                                         <span class="txt">Ajouter au panier</span>
@@ -169,3 +169,62 @@
 
 <div class="row mt-5"></div>
 <script src="https://kit.fontawesome.com/893a108b01.js" crossorigin="anonymous"></script>
+<script>
+    function filterProducts() {
+        var category = document.getElementById("categorySelect").value;
+        var searchString = document.getElementById("searchInput").value.toLowerCase();
+        var cards = document.getElementsByClassName("product-card");
+
+        for (var i = 0; i < cards.length; i++) {
+            var card = cards[i];
+            var cardCategory = card.getAttribute("data-category");
+            var cardTitle = card.getAttribute("data-title").toLowerCase();
+
+            var categoryMatch = category === "" || cardCategory === category;
+            var searchMatch = cardTitle.includes(searchString);
+
+            if (categoryMatch && searchMatch) {
+                card.style.display = "block";
+            } else {
+                card.style.display = "none";
+            }
+        }
+    }
+
+    function addToCart(productId) {
+        var cartItems = localStorage.getItem("cartItems") ? JSON.parse(localStorage.getItem("cartItems")) : [];
+        console.log('productId', productId, cartItems)
+
+        // Vérifie si le produit existe déjà dans le panier
+        var existingProduct = cartItems.find(function (item) {
+            return item.id === productId;
+        });
+
+        if (existingProduct) {
+            // Le produit existe déjà, vous pouvez mettre à jour la quantité ou effectuer d'autres actions
+            // Par exemple, existingProduct.quantity += 1;
+        } else {
+            // Le produit n'existe pas encore dans le panier, vous pouvez l'ajouter
+            // Récupérer les détails du produit à partir de la liste des produits disponibles sur la page
+            var productElement = document.querySelector(`[data-product-id="${productId}"]`);
+            var productName = productElement.querySelector(".p-name").textContent;
+            var productCategory = productElement.querySelector(".p-company").textContent;
+            
+            var productPrice = productElement.querySelector(".price").textContent;
+            var productImage = productElement.querySelector(".img").getAttribute("src");
+
+            var newProduct = {
+                id: productId,
+                name: productName,
+                category: productCategory,
+                quantity: 1,
+                price: productPrice,
+                image: productImage
+            };
+            cartItems.push(newProduct);
+        }
+
+        // Met à jour le localStorage avec les nouveaux éléments du panier
+        localStorage.setItem("cartItems", JSON.stringify(cartItems));
+    }
+</script>

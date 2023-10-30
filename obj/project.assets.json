@@ -11217,11 +11217,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\HASSANI Elmehdi\\Desktop\\DotNet\\E-CommerceApp\\E-CommerceApp.csproj",
+      "projectUniqueName": "C:\\Users\\HASSANI Elmehdi\\Desktop\\DotNet\\Nouveau dossier\\E-CommerceApp\\E-CommerceApp.csproj",
       "projectName": "E-CommerceApp",
-      "projectPath": "C:\\Users\\HASSANI Elmehdi\\Desktop\\DotNet\\E-CommerceApp\\E-CommerceApp.csproj",
+      "projectPath": "C:\\Users\\HASSANI Elmehdi\\Desktop\\DotNet\\Nouveau dossier\\E-CommerceApp\\E-CommerceApp.csproj",
       "packagesPath": "C:\\Users\\HASSANI Elmehdi\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\HASSANI Elmehdi\\Desktop\\DotNet\\E-CommerceApp\\obj\\",
+      "outputPath": "C:\\Users\\HASSANI Elmehdi\\Desktop\\DotNet\\Nouveau dossier\\E-CommerceApp\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\HASSANI Elmehdi\\AppData\\Roaming\\NuGet\\NuGet.Config",

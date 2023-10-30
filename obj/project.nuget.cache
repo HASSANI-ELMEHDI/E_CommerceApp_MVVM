@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Ywbr7tQrOkOP9frFR5b578tBonYDlzvD3Eq6XxgkDj6mpwLRH2DUYgwrDimvdDaQgnm0H7u8ZMFUCYdOd5Y+rA==",
+  "dgSpecHash": "HMbX4XF419sGIaDGwrMV8lbv2gJHg2wVYUZ3WVCc/OWv4GDybH6g88C8XEaywWn64jnMuOF/dz+PNZWqbWAyWA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\HASSANI Elmehdi\\Desktop\\DotNet\\E-CommerceApp\\E-CommerceApp.csproj",
+  "projectFilePath": "C:\\Users\\HASSANI Elmehdi\\Desktop\\DotNet\\Nouveau dossier\\E-CommerceApp\\E-CommerceApp.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\HASSANI Elmehdi\\.nuget\\packages\\humanizer\\2.14.1\\humanizer.2.14.1.nupkg.sha512",
     "C:\\Users\\HASSANI Elmehdi\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",

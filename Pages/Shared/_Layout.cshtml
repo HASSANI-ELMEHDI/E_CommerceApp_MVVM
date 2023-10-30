@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="~/css/nav.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/footer.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/card.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+
 </head>
 <body>
 <header class="fade-in">
@@ -32,19 +34,27 @@
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-page="/Categories/Index">Categories</a>
                     </li>
+                    <li class="nav-item">
+                            <button type="button" onclick="displayCartItems()"  class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+                            Panier
+                        </button>
+                    </li>
                 </ul>
             </div>
         </div>
     </nav>
 </header>
     
-    <div class="container slide-down">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+<div class="container slide-down">
+    <main role="main" class="pb-3">
+        @RenderBody()
+    </main>
+</div>
 
-    <footer class="footer sticky-footer ">
+
+
+
+<footer class="footer sticky-footer ">
     <div class="container">
         <div class="row">
             <div class="col-md-3">
@@ -86,11 +96,166 @@
     </div>
 </footer>
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    <!-- The Modal -->
+    <div class="modal" id="myModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Mon Panier</h4>
+                    
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <ul id="cartItemsList"></ul>
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Continue shopping</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Fonction pour afficher les produits du panier dans le modal
+
+
+        function displayCartItems() {
+            var cartItems = localStorage.getItem("cartItems") ? JSON.parse(localStorage.getItem("cartItems")) : [];
+            var cartItemsList = document.getElementById("cartItemsList");
+            console.log('panier', cartItems)
+            cartItemsList.innerHTML = ""; // Efface le contenu précédent de la liste
+
+            cartItems.forEach(function (item) {
+                // Créer une carte pour chaque produit dans le panier
+                var card = document.createElement("div");
+                card.classList.add("card");
+                card.style.display = "grid";
+                card.style.gridTemplateColumns = "auto 1fr";
+                card.style.gridGap = "10px";
+                card.style.marginBottom = "10px";
+
+                // Image du produit
+                var img = document.createElement("img");
+                img.classList.add("card-img-top");
+                img.src = item.image;
+                img.alt = "Product Image";
+                img.style.maxWidth = "80px";
+                img.style.maxHeight = "80px";
+                card.appendChild(img);
+
+                // Contenu de la carte
+                var cardBody = document.createElement("div");
+
+                // Catégorie du produit
+                var name = document.createElement("h5");
+                name.classList.add("card-title");
+                name.innerText = item.name;
+                cardBody.appendChild(name);
+
+                // Catégorie du produit
+                var category = document.createElement("h6");
+                category.classList.add("card-text");
+                category.innerText = item.category;
+                cardBody.appendChild(category);
+
+                // Quantité du produit
+                var quantityContainer = document.createElement("div");
+                quantityContainer.style.display = "flex";
+                quantityContainer.style.alignItems = "center";
+
+                var quantityLabel = document.createElement("label");
+                quantityLabel.innerText = "Quantité:";
+                quantityContainer.appendChild(quantityLabel);
+
+                var quantityInput = document.createElement("input");
+                quantityInput.type = "number";
+                quantityInput.value = item.quantity;
+                quantityInput.addEventListener("change", function () {
+                    updateCartItemQuantity(item.id, parseInt(quantityInput.value));
+                });
+                quantityContainer.appendChild(quantityInput);
+
+                cardBody.appendChild(quantityContainer);
+
+                // Bouton de suppression
+                var removeButton = document.createElement("button");
+                removeButton.classList.add("btn", "btn-danger");
+                removeButton.innerText = "Remove";
+                removeButton.addEventListener("click", function () {
+                    removeCartItem(item.id);
+                    displayCartItems(); // Mettre à jour l'affichage après la suppression
+                });
+                cardBody.appendChild(removeButton);
+
+
+                card.appendChild(cardBody);
+                cartItemsList.appendChild(card);
+            });
+        }
+
+        // Fonction pour supprimer un produit du panier
+        function removeCartItem(productId) {
+            var cartItems = localStorage.getItem("cartItems") ? JSON.parse(localStorage.getItem("cartItems")) : [];
+
+            // Recherche de l'index du produit dans le panier
+            var index = cartItems.findIndex(function (item) {
+                return item.id === productId;
+            });
+
+            if (index !== -1) {
+                // Supprime le produit du tableau
+                cartItems.splice(index, 1);
+
+                // Met à jour le panier dans le stockage local
+                localStorage.setItem("cartItems", JSON.stringify(cartItems));
+
+                // Affiche les produits mis à jour
+                displayCartItems();
+            }
+        }
+
+        // Fonction pour modifier la quantité d'un produit dans le panier
+        function updateCartItemQuantity(productId, newQuantity) {
+            var cartItems = localStorage.getItem("cartItems") ? JSON.parse(localStorage.getItem("cartItems")) : [];
+
+            // Recherche du produit dans le panier
+            var item = cartItems.find(function (item) {
+                return item.id === productId;
+            });
+
+            if (item) {
+                // Met à jour la quantité du produit
+                item.quantity = newQuantity;
+
+                // Met à jour le panier dans le stockage local
+                localStorage.setItem("cartItems", JSON.stringify(cartItems));
+
+                // Affiche les produits mis à jour
+                displayCartItems();
+            }
+        }
+
+        // Appel à la fonction pour afficher les produits du panier lors de l'ouverture du modal
+        document.getElementById("myModal").addEventListener("shown.bs.modal", function () {
+            displayCartItems();
+        });
+    </script>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="~/js/site.js" asp-append-version="true"></script>
-   
+<script src="~/js/panier.js" asp-append-version="true"></script>
 
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 
 
